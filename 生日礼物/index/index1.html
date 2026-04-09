@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小羊生日快乐</title>
+    <link rel="stylesheet" href="./css/css.css">
+</head>
+<body>
+    <div class="haad">
+        <button class="pause-btn" id="pause-btn">⏸ 暂停音乐</button>
+        <div class="cake">🎂</div>
+        <h2>
+            小羊生日快乐！
+        </h2>
+        <p>祝全天下最可爱，最聪明，最乖的小羊十九岁生日快乐！</p>
+        <div class="audio-container">
+            <audio id="birthday-audio" src="../mp3/happy birthday.mp3" loop></audio>
+            <button class="music-btn" id="view-gift-btn">查看礼物</button>
+        </div>
+        <div class="navigation" id="navigation">
+            <button class="nav-btn" data-target="meiyangyang">美羊羊</button>
+            <button class="nav-btn" data-target="lanyangyang">懒羊羊</button>
+            <button class="nav-btn" data-target="jiyu">寄语</button>
+            <button class="nav-btn" data-target="chailiwu">拆礼物</button>
+        </div>
+        <script>
+            document.getElementById('view-gift-btn').addEventListener('click', function() {
+                const audio = document.getElementById('birthday-audio');
+                audio.play();
+                document.getElementById('navigation').style.display = 'flex';
+            });
+            document.getElementById('pause-btn').addEventListener('click', function() {
+                const audio = document.getElementById('birthday-audio');
+                if (audio.paused) {
+                    audio.play();
+                    this.innerHTML = '⏸ 暂停音乐';
+                } else {
+                    audio.pause();
+                    this.innerHTML = '▶ 播放音乐';
+                }
+            });
+            
+            // 为导航按钮添加点击事件
+            document.querySelectorAll('.nav-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // 隐藏所有内容
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // 显示目标内容
+                    document.getElementById(targetId).style.display = 'block';
+                });
+            });
+            
+            // 轮播图功能
+            document.addEventListener('DOMContentLoaded', function() {
+                const carousels = document.querySelectorAll('.carousel');
+                
+                carousels.forEach(carousel => {
+                    const container = carousel.querySelector('.carousel-container');
+                    const slides = carousel.querySelectorAll('.carousel-slide');
+                    const prevBtn = carousel.querySelector('.carousel-btn-prev');
+                    const nextBtn = carousel.querySelector('.carousel-btn-next');
+                    const indicatorsContainer = carousel.querySelector('.carousel-indicators');
+                    
+                    let currentIndex = 0;
+                    const slideCount = slides.length;
+                    
+                    // 创建指示器
+                    for (let i = 0; i < slideCount; i++) {
+                        const indicator = document.createElement('div');
+                        indicator.classList.add('carousel-indicator');
+                        if (i === 0) {
+                            indicator.classList.add('active');
+                        }
+                        indicator.addEventListener('click', function() {
+                            currentIndex = i;
+                            updateCarousel();
+                        });
+                        indicatorsContainer.appendChild(indicator);
+                    }
+                    
+                    const indicators = carousel.querySelectorAll('.carousel-indicator');
+                    
+                    function updateCarousel() {
+                        container.style.transform = `translateX(-${currentIndex * 100}%)`;
+                        
+                        // 更新指示器
+                        indicators.forEach((indicator, index) => {
+                            if (index === currentIndex) {
+                                indicator.classList.add('active');
+                            } else {
+                                indicator.classList.remove('active');
+                            }
+                        });
+                    }
+                    
+                    function nextSlide() {
+                        currentIndex = (currentIndex + 1) % slideCount;
+                        updateCarousel();
+                    }
+                    
+                    function prevSlide() {
+                        currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+                        updateCarousel();
+                    }
+                    
+                    // 按钮事件
+                    nextBtn.addEventListener('click', nextSlide);
+                    prevBtn.addEventListener('click', prevSlide);
+                    
+                        // 自动轮播（美羊羊部分的轮播图禁用自动切换）
+                    if (!carousel.classList.contains('small-carousel')) {
+                        setInterval(nextSlide, 3000);
+                    }
+                });
+                
+                // 图片查看器功能
+                const imageViewer = document.createElement('div');
+                imageViewer.classList.add('image-viewer');
+                imageViewer.innerHTML = `
+                    <span class="close-btn">&times;</span>
+                    <img src="" alt="放大图片">
+                `;
+                document.body.appendChild(imageViewer);
+                
+                const closeBtn = imageViewer.querySelector('.close-btn');
+                const viewerImg = imageViewer.querySelector('img');
+                
+                // 点击关闭按钮
+                closeBtn.addEventListener('click', function() {
+                    imageViewer.classList.remove('active');
+                });
+                
+                // 点击查看器背景关闭
+                imageViewer.addEventListener('click', function(e) {
+                    if (e.target === imageViewer) {
+                        imageViewer.classList.remove('active');
+                    }
+                });
+                
+                // 为所有图片添加点击事件
+                const images = document.querySelectorAll('.content-section img, .carousel-slide img');
+                images.forEach(img => {
+                    img.addEventListener('click', function() {
+                        const imgSrc = this.src;
+                        viewerImg.src = imgSrc;
+                        imageViewer.classList.add('active');
+                    });
+                });
+                
+                // 礼物链接点击事件
+                const giftLinks = document.querySelectorAll('.gift-link');
+                const giftModals = document.querySelectorAll('.gift-modal');
+                const giftCloses = document.querySelectorAll('.gift-close');
+                
+                giftLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('data-target');
+                        const modal = document.getElementById(targetId);
+                        modal.classList.add('active');
+                    });
+                });
+                
+                // 关闭模态框
+                giftCloses.forEach(close => {
+                    close.addEventListener('click', function() {
+                        const modal = this.closest('.gift-modal');
+                        modal.classList.remove('active');
+                    });
+                });
+                
+                // 点击模态框背景关闭
+                giftModals.forEach(modal => {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+    <div class="content-container">
+        <div id="meiyangyang" class="content-section">
+            <!-- 美羊羊内容 -->
+            <h3>美羊羊</h3>
+            <!-- 轮播图 -->
+            <div class="carousel small-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide">
+                        <img src="../image/myy1.jpeg" alt="美羊羊1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy2.jpeg" alt="美羊羊2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy3.jpeg" alt="美羊羊3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy4.jpeg" alt="美羊羊4">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy5.jpeg" alt="美羊羊5">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy6.jpeg" alt="美羊羊6">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy7.jpeg" alt="美羊羊7">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/myy8.jpg" alt="美羊羊8">
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev">‹</button>
+                <button class="carousel-btn carousel-btn-next">›</button>
+                <div class="carousel-indicators"></div>
+            </div>
+            <p>哈哈哈，如何如何，是不是连自己都觉得很可爱很好看啊，这可是我认认真真挑选出来的好看的照片哦</p>
+            <!-- gmmy轮播图 -->
+            <div class="carousel small-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide">
+                        <img src="../image/gmyy.jpeg" alt="gmmy1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/gmyy1.jpeg" alt="gmmy2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/gmyy2.jpeg" alt="gmmy3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/gmyy3.jpeg" alt="gmmy4">
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev">‹</button>
+                <button class="carousel-btn carousel-btn-next">›</button>
+                <div class="carousel-indicators"></div>
+            </div>
+        </div>
+        <div id="lanyangyang" class="content-section">
+            <!-- 懒羊羊内容 -->
+            <h3>懒羊羊</h3>
+            <!-- 轮播图 -->
+            <div class="carousel small-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide">
+                        <img src="../image/ddy1.jpeg" alt="ddy1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy2.jpeg" alt="ddy2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy3.jpeg" alt="ddy3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy4.jpeg" alt="ddy4">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy5.jpg" alt="ddy5">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy6.jpg" alt="ddy6">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy7.jpg" alt="ddy7">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ddy8.jpg" alt="ddy8">
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev">‹</button>
+                <button class="carousel-btn carousel-btn-next">›</button>
+                <div class="carousel-indicators"></div>
+            </div>
+            <!-- 这里可以添加文字、图片等内容 -->
+            <p>咋样是不是很可爱啊</p>
+        </div>
+        <div id="jiyu" class="content-section">
+            <!-- 寄语内容 -->
+            <h3>寄语</h3>
+            <!-- 这里可以添加文字、图片等内容 -->
+             <img src="" alt="">
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;转眼间高中三年已过，现如今我们进入了大学，很庆幸我们的友谊依然如旧
+            回想去年的现在，我们在隔壁走班教室为你庆生的回忆历历在目，
+            <img src="../image/wswk.jpg" alt="">
+            往时往刻，又恰如彼时彼刻，不同的是岁月，相同的的是友谊。<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;高一的时候我记得你是和小马宝莉坐一块的，那会我一直以为你是那种
+            高冷的人，每天没有一丁点存在感，到点就走，表情也没有什么变化，我以为我高中三年和你也会像和初
+            中的那些小透明一样没有什么交集就匆匆毕业。<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;我记得我俩是高一下才玩的比较好的，依稀记得是寒假，我俩畅所欲言
+            你是我第一个续了三十天火花的人，当高二上期的时候你我文峰三个人分到了一坨，我俩一起逗侯哥玩，
+            你还要写峰哥哥的小说，我们三人度过了很有趣的一段时光。我还记得高二下期的时候，我记得第一节音乐课，抽
+            你上去唱歌唱完了歌的人可以抽下一个人去唱，当时你小子抽我上去，简直臊皮，后来我记得很清楚，我
+            坐在艾伦旁边，我教你和艾伦玩魔方，哈哈哈你俩也算是师兄妹关系了,可是后面我记得你那会和某些人闹掰了
+            看她们欺负你我却啥也不能做，我觉得挺难受的，所以后来当你邀请我做你同桌时我才想着只要先邀请我的郭没意见我就同意，
+            我觉得当时看来你的确在班上处境很差，我不坐你旁边你一个人去坐的话没准又要挨欺负，在我旁边我觉得
+            至少我的脾气也不会有人敢在我的面前欺负你，当然现在看来，当初我没有去为了一个早就恨透我的人而放
+            弃与你做同桌，这是我高中三年里做的最让我不后悔的事，很庆幸当初选择和你坐同桌，这让我俩的友谊更
+            加坚固，你也成了全班唯一知道我在这班上的过往的秘密的人，也是那一学期我俩吵过架，闹过不少矛盾，
+            彼此也道过歉，这恰恰也考验了我俩的友谊，后来发生了一些很糟糕的事，当时我真的很怕，很怕你这家伙做
+            出什么极端的事情，我每天早上和中午起床都想着先去教室看看你的情况，那会早上的歌曲和中午的歌曲就是
+            这样烙印在了我的脑子里，现在我戴耳机听到这些歌的时候都会想起那段时间，在那段时间我也和你分享了我
+            的一些经历，我们彼此安慰，鼓励，所幸你走出来了，万幸万幸...现在想来我们这段友谊经历了的东西真不
+            少东西，彼此陪伴了彼此的成长，所以我们更要珍惜我们的关系，高三下期，一开始我俩又闹过几次矛盾，不
+            过万幸最后都和好了。<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;当高考完了以后，我以为我们也将各奔东西，关系会慢慢被磨损，然而事实上
+            我们的关系却在不降反升，你是唯一一个和我的火花没断过的人，每天甚至不需要去特意续火，而是打心底的
+            每天都会想分享各种事情，你拍的好看的照片，你买了啥好吃的，你当天发生的趣事...你知道吗，去年我的
+            生日猜到了你的惊喜,你说你很伤心被我猜到了，那个时候我真的很被感动，一半来自你精心准备的礼物，一半
+            来自你的态度，你是第一个为我准备那么多礼物还那么用心的人，从那会起，做一辈子朋友的约定在我心中愈发
+            沉重，<img src="../image/ndlw.jpg" alt="">,我也打那时起也想着什么时候也给你准备惊喜，后来
+            圣诞节的时候，我为你准备了你很久之前就说觉得很可爱的小猫鞋子哦，而且其实给你买的那双是我在抖音上看到
+            的最贵的，那双小猫拖鞋有卖十几块的有二十几的，我给你买的四十的，那是我看到的最贵的，就是想买给你尽量
+            好的，当时其实我知道你是38码脚，不过我怕我记错了，犹豫了许久，我还是来问了下，就让你知道了，你又给我
+            买了那个苹果，你知道吗，我去取苹果有多开心，
+            <img src="../image/pg.jpg" alt="">
+            也算是因为你才头一次过了个圣诞节，后来你让我去寺庙上许愿，我问你是啥愿望，你说：“许愿我们做一辈子朋友”
+            ，再问了两次你居然是认真，觉得很吃惊居然是这么小的愿望，但是却更高兴是这样的愿望，你的坦率和真诚再次让
+            我感动不已，还记得我和郭去眉山，叫你一起出来玩，那天我们打了很久的游戏，一起吃了美食以后在眉山里面到处逛
+            看到了以前研学到过的三苏祠，我们聊了好多好玩的事情，你还请我吃了我人生中第一个蛋烘糕，我们还去跳了广场舞
+            ，去在飞饼哥的直播间出镜，还一起跳了广场舞，那天我们回乐山了以后，你说那天玩的很兴奋，晚上睡不着觉，我也
+            们很开心，你也让我们那天变得更加有趣，前段时间我们出了点小误会，其实我都没注意到，不过你很认真的给我解释送礼物
+            ，还说“你好像只要在我面前就能做那个幼稚的小孩”，“你第一次给游戏充钱是为了给我送礼物”，这些话让我感到被完完全全的信任与重视，这种被人信任与重视的感觉真的很让人开心
+            ，我真的无比幸福，十分感谢这个世界上居然有小羊这样的可爱，聪明，真诚，坦率的女孩子。
+            </p>
+            <!-- 轮播图 -->
+            <div class="carousel original-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide">
+                        <img src="../image/ms1.jpg" alt="轮播图1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ms2.jpg" alt="轮播图2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ms3.jpg" alt="轮播图3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ms4.jpg" alt="轮播图4">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../image/ms5.jpg" alt="轮播图5">
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev">‹</button>
+                <button class="carousel-btn carousel-btn-next">›</button>
+                <div class="carousel-indicators"></div>
+            </div>
+            <P>&nbsp;&nbsp;&nbsp;&nbsp;聊完过去，这里是我给小羊的寄语哦，小羊以后可以多多分享你的烦恼和问题给我，
+            我会尽全力帮小羊的，以后如果觉得我没有给到你相应的回复啊，或者说觉得
+            我哪里没做到位也一定要说，我不会嫌弃你烦更不会因为这些生你的气，相反如果
+            你一直不敢和我说，生闷气，我才会觉得难受，男生和女生思考方式和角度有很大
+            的差别，要多沟通；还有就是以后千万别让别人欺负你，开玩笑的方式一旦不尊重你
+            你就立马提出来，不听的话就和家人老师说，千万不要逆来顺受，放纵别人伤害你就
+            是在伤害每一个爱你的人；遇到任何事挫折一定要坚强，自己没法解决就多问别人
+            问你父亲问你老师或者问我也罢，别一个人硬来，最后就是，我们要做一辈子朋友!<p>
+        </div>
+        <div id="chailiwu" class="content-section">
+            <!-- 拆礼物内容 -->
+            <audio src="../mp3/wodezhufu.mp3" controls autoplay loop></audio>
+            <h3>拆礼物</h3>
+            <div class="gift-images">
+                <a href="#" class="gift-link" data-target="gift1">
+                    <img src="../image/lwtp.jpg" alt="礼物1">
+                </a>
+                <a href="#" class="gift-link" data-target="gift2">
+                    <img src="../image/lwtpsq.jpg" alt="礼物2">
+                </a>
+                <a href="#" class="gift-link" data-target="gift3">
+                    <img src="../image/lwtpxs.jpg" alt="礼物3">
+                </a>
+                <a href="#" class="gift-link" data-target="gift4">
+                    <img src="../image/lwtpzjy.jpg" alt="礼物4">
+                </a>
+                <a href="#" class="gift-link" data-target="gift5">
+                    <img src="../image/lwtpsb.jpg" alt="礼物5">
+                </a>
+            </div>
+            <p>最后再次祝小羊十九岁生日快乐</p>
+        </div>
+        
+        <!-- 礼物介绍模态框 -->
+        <div class="gift-modal" id="gift1">
+            <div class="gift-modal-content">
+                <span class="gift-close">&times;</span>
+                <h4>礼物1介绍</h4>
+                <p>没想到吧，我还是给你准备了手工，不然为什么我能精准地预测它发货的时间呢
+                    哈哈，不过由于这是我第一次准备这种东西，所以还是很多细节不够完美，望见谅
+                </p>
+            </div>
+        </div>
+        <div class="gift-modal" id="gift2">
+            <div class="gift-modal-content">
+                <span class="gift-close">&times;</span>
+                <h4>礼物2介绍</h4>
+                <p>这是书签，小羊很喜欢读书，我也希望如果小羊没有书签的话我这个能派上用场</p>
+            </div>
+        </div>
+        <div class="gift-modal" id="gift3">
+            <div class="gift-modal-content">
+                <span class="gift-close">&times;</span>
+                <h4>礼物3介绍</h4>
+                <p>你说你很喜欢这种香水味，说你都不敢想象你身上有这个味道的感觉
+                    现在你应该不用想象了，喷一下试试是不是你喜欢的味道（这个就是早上买晚上到的那个哦）
+                </p>
+            </div>
+        </div>
+        <div class="gift-modal" id="gift4">
+            <div class="gift-modal-content">
+                <span class="gift-close">&times;</span>
+                <h4>礼物4介绍</h4>
+                <p>这是指甲油，小羊之前和我炫耀过说室友给你涂的
+                    ，你很喜欢觉得很好看，虽然我不知道你有没有
+                    指甲油，不过我这一买，小羊就百分百有属于自己的指甲油了
+                </p>
+            </div>
+        </div>
+        <div class="gift-modal" id="gift5">
+            <div class="gift-modal-content">
+                <span class="gift-close">&times;</span>
+                <h4>礼物5介绍</h4>
+                <p>这是只陶瓷杯子，你倒水进去就会有惊喜的哦，不过容易摔坏
+                    拿来漱口喝水啥的很合适，
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

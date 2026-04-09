@@ -1,0 +1,447 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+body {
+     background-color: #FFF9E8;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     min-height: 100vh;
+     margin: 0;
+     padding: 0;
+}
+
+.audio-container {
+    margin-top: auto;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.audio-container audio {
+    display: none;
+}
+
+.navigation {
+    display: none;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    background-color: #FFB6C1;
+    color: #333;
+    border: 2px solid #FF69B4;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+
+.nav-btn:hover {
+    background-color: #FF69B4;
+    color: white;
+    transform: scale(1.05);
+}
+
+.pause-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #FFB6C1;
+    color: #333;
+    border: 2px solid #FF69B4;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Microsoft Yahei", sans-serif;
+    z-index: 10;
+}
+
+.pause-btn:hover {
+    background-color: #FF69B4;
+    color: white;
+    transform: scale(1.05);
+}
+
+.content-container {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-section {
+    display: none;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.content-section h3 {
+    color: #FF69B4;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.content-section p {
+    color: #333;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.content-section img:not(.carousel-slide img) {
+    max-width: 60%;
+    border-radius: 10px;
+    margin: 10px auto;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.content-section img:not(.carousel-slide img):hover {
+    transform: scale(1.05);
+}
+
+/* 图片查看器样式 */
+.image-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.image-viewer.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-viewer img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.image-viewer .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* 轮播图图片也可点击放大 */
+.carousel-slide img {
+    cursor: pointer;
+}
+
+/* 轮播图样式 */
+.carousel {
+    position: relative;
+    max-width: 100%;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.carousel-slide {
+    min-width: 100%;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn-prev {
+    left: 10px;
+}
+
+.carousel-btn-next {
+    right: 10px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicator.active {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.2);
+}
+
+/* 原始轮播图样式（寄语部分） */
+.original-carousel {
+    max-width: 60%;
+    margin: 30px auto;
+    height: 200px;
+    overflow: hidden;
+}
+
+.original-carousel .carousel-container {
+    height: 100%;
+}
+
+.original-carousel .carousel-slide {
+    height: 100%;
+}
+
+.original-carousel .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.original-carousel .carousel-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+}
+
+.original-carousel .carousel-indicator {
+    width: 6px;
+    height: 6px;
+}
+
+/* 小轮播图样式（美羊羊部分） */
+.small-carousel {
+    max-width: 80%;
+    margin: 30px auto;
+    height: 300px;
+    overflow: hidden;
+}
+
+.small-carousel .carousel-container {
+    height: 100%;
+}
+
+.small-carousel .carousel-slide {
+    height: 100%;
+}
+
+.small-carousel .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: white;
+}
+
+.small-carousel .carousel-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+}
+
+.small-carousel .carousel-indicator {
+    width: 6px;
+    height: 6px;
+}
+.haad {
+    text-align: center;
+    background-color: #f5f5f5;
+    font-family: "Microsoft Yahei", sans-serif;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: pink;
+    font-size: 20px;
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/* 卡通可爱风格 - 音频按钮样式 */
+.music-btn {
+    background-color: #FF69B4; /* 粉色主色 */
+    color: white;
+    border: 3px solid #FFB6C1; /* 浅粉色边框 */
+    padding: 15px 45px;
+    border-radius: 50px; /* 全圆角，胶囊形状 */
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    font-family: "Comic Sans MS", "幼圆", sans-serif; /* 卡通字体 */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 文字轻微阴影 */
+}
+
+/* 鼠标悬浮效果 */
+.music-btn:hover {
+    background-color: #FF1493; /* 深粉色 */
+    transform: scale(1.1); /* 放大10% */
+    border-color: #FFC0CB; /* 边框颜色变浅 */
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.4); /* 发光效果 */
+}
+.haad p {
+    margin: 10px;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+
+        transform: translateY(-15px);
+    }
+
+}
+.haad .cake {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+/* 礼物图片样式 */
+.gift-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.gift-link {
+    flex: 1 1 200px;
+    max-width: 200px;
+    text-align: center;
+}
+
+.gift-link img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gift-link img:hover {
+    transform: scale(1.05);
+}
+
+/* 礼物介绍模态框样式 */
+.gift-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.gift-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.gift-modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.gift-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #666;
+}
+
+.gift-modal-content h4 {
+    color: #FF69B4;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.gift-modal-content p {
+    color: #333;
+    line-height: 1.6;
+    text-align: left;
+}
+
+
